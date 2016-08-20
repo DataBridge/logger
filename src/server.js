@@ -10,7 +10,7 @@ import { merge } from 'lodash';
 import parse from 'co-body';
 
 import FileBackend from './backends/file';
-import Logger from './index';
+import Logger from './Logger';
 
 const app = new Koa();
 const randomGenerator = new Chance();
@@ -53,8 +53,8 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   const startStoring = now();
   // TODO sanitize/verify log entries
-  const entries = ctx.body;
-  await Promise.all(entries.map((entry) => backend.store(entry)));
+  const messages = ctx.body;
+  await backend.store(messages);
   const endStoring = now();
   ctx.log('logs-stored', {
     storingDuration: endStoring - startStoring
@@ -64,7 +64,7 @@ app.use(async (ctx, next) => {
 
 app.use(async ({ response }, next) => {
   response.status = 200;
-  response.body="";
+  response.body = '';
   await next();
 });
 
