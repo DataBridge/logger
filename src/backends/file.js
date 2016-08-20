@@ -27,11 +27,13 @@ class FileBackend {
   /**
    * Store a message/packet using this backend
    *
-   * @param {object} message the message to persist
-   * @return {undefined}
+   * @param {Array<object>} messages the message to persist
+   * @return {Promise} a promise when the writing is done
    */
-  store(message) {
-    return this.file.write(`${JSON.stringify(message)}\n`);
+  store(messages) {
+    return Promise.all(messages.map(
+      message => this.file.write(`${JSON.stringify(message)}\n`)
+    ));
   }
 }
 
