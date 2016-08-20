@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "stage-0",
+    "es2015"
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-flow-strip-types",
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    "transform-async-to-generator"
+  ]
+}

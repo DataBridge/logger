@@ -1,0 +1,53 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "mocha": true
+  },
+  "plugins": [
+    "react",
+    "flowtype"
+  ],
+  "extends": [
+    "airbnb"
+  ],
+  "rules": {
+    "flowtype/space-after-type-colon": [
+      1,
+      "always"
+    ],
+    "flowtype/space-before-type-colon": [
+      1,
+      "never"
+    ],
+    "flowtype/type-id-match": [
+      1,
+      "^([A-Z][a-z0-9]+)+Type$"
+    ],
+    "require-jsdoc": 2,
+    "valid-jsdoc": 2,
+    "no-alert": 2,
+    "strict": 2,
+    "no-var": 2,
+    "react/prop-types": 2,
+    "react/jsx-filename-extension": 0,
+    "no-console": 2,
+    "no-param-reassign": 0,
+    "prefer-template": 2,
+    "arrow-parens": 0,
+    "prefer-arrow-callback": 2,
+    "global-require": 0,
+    "comma-dangle": 0,
+    "react/prop-types": 2,
+    "react/jsx-filename-extension": 0,
+    "jsx-boolean-value": 0,
+    "no-underscore-dangle": 0,
+    "require-jsdoc": ["error", {
+        "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": false,
+            "ClassDeclaration": false
+        }
+    }]
+  }
+}
