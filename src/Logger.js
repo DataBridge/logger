@@ -14,7 +14,7 @@ class Logger {
   /**
    * Create a new looger
    *
-   * @param {string} application th name of the application bridge
+   * @param {string} application the name of the application bridge
    * @param {function} backend the function responsible to store the log entry
    * @param {string} identity the identity of the person logging things
    */

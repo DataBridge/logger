@@ -6,7 +6,7 @@
 import fs from 'mz/fs';
 
 /**
- * A backend that write the logs to a single file
+ * A backend that writes the logs to a single file
  *
  * It does not support log rotation
  */
@@ -27,7 +27,7 @@ class FileBackend {
   /**
    * Store a message/packet using this backend
    *
-   * @param {Array<object>} messages the message to persist
+   * @param {Array<object>} messages the messages to persist
    * @return {Promise} a promise when the writing is done
    */
   store(messages) {
