@@ -1,7 +1,7 @@
 /**
- * @author Guillaume Leclerc <guillaume.leclerc.work@gmail.com>
- * @flow
- */
+* @author Guillaume Leclerc <guillaume.leclerc.work@gmail.com>
+* @flow
+*/
 
 import Chance from 'chance';
 import Koa from 'koa';
@@ -19,6 +19,7 @@ const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 
 logger.log('logger-prepare');
 
+// Build ctx.log method
 app.use(async (ctx, next) => {
   const requestId = randomGenerator.guid();
   ctx.log = (eventId, details, level) => { // eslint-disable-line no-param-reassign
@@ -27,11 +28,29 @@ app.use(async (ctx, next) => {
     });
     logger.log(eventId, allDetails, level);
   };
+
+  // Log the new request
   ctx.log('new-request', {
     ip: ctx.request.ip,
-    length: ctx.request.length,
-    requestId,
+    length: ctx.request.length
   });
+  await next();
+});
+
+// Filter out non-post requests
+app.use(async (ctx, next) => {
+  if (ctx.request.method === 'POST') {
+    await next();
+  } else {
+    ctx.log('non-post-request', {
+      method: ctx.request.method,
+      url: ctx.request.url
+    }, 'warning');
+  }
+});
+
+// Mesure request duration
+app.use(async (ctx, next) => {
   const start = now();
   await next();
   const end = now();
@@ -73,4 +92,3 @@ logger.log('logger-start-listen', {
   port
 });
 app.listen(port);
-

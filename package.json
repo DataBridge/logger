@@ -5,7 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server.js"
+    "start": "node ./server.js",
+    "lint": "node ./node_modules/eslint/bin/eslint.js src"
   },
   "repository": {
     "type": "git",
@@ -39,5 +40,15 @@
     "mz": "^2.4.0",
     "performance-now": "^0.2.0",
     "superagent": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.3.1",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.11.0",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.1.2"
   }
 }
