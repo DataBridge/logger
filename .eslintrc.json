@@ -29,12 +29,12 @@
     "strict": 2,
     "no-var": 2,
     "no-console": 2,
-    "no-param-reassign": 0,
     "prefer-template": 2,
     "arrow-parens": 0,
     "prefer-arrow-callback": 2,
     "global-require": 0,
     "comma-dangle": 0,
+    "no-param-reassign": 0,
     "no-underscore-dangle": 0,
     "require-jsdoc": ["error", {
         "require": {
