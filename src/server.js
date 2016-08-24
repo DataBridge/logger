@@ -70,6 +70,11 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
+// ctx.body
+  await next();
+});
+
+app.use(async (ctx, next) => {
   const startStoring = now();
   // TODO sanitize/verify log entries
   const messages = ctx.body;
