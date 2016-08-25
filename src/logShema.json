@@ -1,8 +1,0 @@
-const logShema = {
-  "identity": {"type": "string"},
-  "application": {"type": "string"},
-  "timestamp": {"type": "integer"},
-  "eventId":{"type": "string"},
-  "details": {"type": "object"},
-  "level": {"type": "string"}
-};
