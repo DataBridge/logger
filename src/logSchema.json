@@ -1,0 +1,58 @@
+{
+  "title" : "logSchema",
+  "description" : "This is a schema that describes validity of blocks of logs.",
+  "type": "array",
+  "minItems": 1,
+  "required": "true",
+
+  "items": {
+    "type": "object",
+
+    "properties": {
+
+      "identity": {
+        "type": "string",
+        "required": true
+      },
+
+      "application": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "databridge-logger",
+          "databridge-signaling-server",
+          "databridge-connector",
+          "databridge-validator"
+        ]
+      },
+
+      "timestamp": {
+        "type": "integer",
+        "required": true
+      },
+
+      "eventId":{
+        "type": "string",
+        "required": true
+      },
+
+      "details": {
+        "type": "object",
+        "required": true
+      },
+
+      "level": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "debug",
+          "info",
+          "warning",
+          "error",
+          "critical"
+        ]
+
+      }
+    }
+  }
+}
