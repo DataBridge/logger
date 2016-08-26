@@ -16,7 +16,8 @@ import logSchema from './logSchema';
 
 const app = new Koa();
 const randomGenerator = new Chance();
-const backend = new FileBackend('./all.log');
+const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
+const backend = new FileBackend(logfilename);
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 
 logger.log('logger-prepare');
