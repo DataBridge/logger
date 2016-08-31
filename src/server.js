@@ -9,6 +9,7 @@ import now from 'performance-now';
 import { merge } from 'lodash';
 import parse from 'co-body';
 import { validate } from 'jsonschema';
+import path from 'path';
 
 import FileBackend from './backends/file';
 import Logger from './Logger';
@@ -16,7 +17,8 @@ import logSchema from './logSchema';
 
 const app = new Koa();
 const randomGenerator = new Chance();
-const backend = new FileBackend('./all.log');
+const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
+const backend = new FileBackend(path.resolve(logfilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 
 logger.log('logger-prepare');
