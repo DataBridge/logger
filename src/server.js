@@ -8,9 +8,11 @@ import Koa from 'koa';
 import now from 'performance-now';
 import { merge } from 'lodash';
 import parse from 'co-body';
+import { validate } from 'jsonschema';
 
 import FileBackend from './backends/file';
 import Logger from './Logger';
+import logSchema from './logSchema';
 
 const app = new Koa();
 const randomGenerator = new Chance();
@@ -46,6 +48,8 @@ app.use(async (ctx, next) => {
       method: ctx.request.method,
       url: ctx.request.url
     }, 'warning');
+    ctx.response.status = 400;
+    ctx.response.body = '';
   }
 });
 
@@ -70,8 +74,20 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
+  const { errors, valid } = validate(ctx.body, logSchema);
+  if (valid) {
+    await next();
+  } else {
+    ctx.log('invalid-body', {
+      errors
+    });
+    ctx.response.status = 400;
+    ctx.response.body = '';
+  }
+});
+
+app.use(async (ctx, next) => {
   const startStoring = now();
-  // TODO sanitize/verify log entries
   const messages = ctx.body;
   await backend.store(messages);
   const endStoring = now();
