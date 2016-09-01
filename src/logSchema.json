@@ -15,7 +15,7 @@
         "required": true
       },
 
-       "application": {
+      "application": {
         "type": "string",
         "required": true,
         "enum": [
@@ -54,5 +54,5 @@
 
       }
     }
-   }
- }
+  }
+}
