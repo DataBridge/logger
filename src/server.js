@@ -1,5 +1,6 @@
 /**
 * @author Guillaume Leclerc <guillaume.leclerc.work@gmail.com>
+* @author MonsieurWave <tensu.wave@gmail.com>
 * @flow
 */
 
@@ -17,8 +18,9 @@ import logSchema from './logSchema';
 
 const app = new Koa();
 const randomGenerator = new Chance();
-const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
-const backend = new FileBackend(path.resolve(logfilename));
+const logFilename = process.env.DATABRIDGE_LOGFILE || './all.log';
+const logFilesize = process.env.DATABRIDGE_LOGSIZE || '200m';
+const backend = new FileBackend(path.resolve(logFilename), logFilesize);
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 
 logger.log('logger-prepare');

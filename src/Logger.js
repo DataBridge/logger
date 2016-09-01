@@ -1,5 +1,6 @@
 /**
  * @author Guillaume Leclerc <guillaume.leclerc.work@gmail.com>
+ * @author MonsieurWave <tensu.wave@gmail.com>
  * @flow
  */
 
