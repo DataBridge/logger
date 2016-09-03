@@ -67,7 +67,17 @@ app.use(async (ctx, next) => {
 
 app.use(async (ctx, next) => {
   const startParsing = now();
-  ctx.body = await parse.json(ctx.request, { limit: '10kb' });
+  try {
+    ctx.body = await parse.json(ctx.request, { limit: '10kb' });
+  } catch (e) {
+    ctx.log('invalid-json-request', {
+      method: ctx.request.method,
+      url: ctx.request.url
+    }, 'warning');
+    ctx.response.status = 400;
+    ctx.response.body = '';
+    return;
+  }
   const endParsing = now();
   ctx.log('body-parsed', {
     parsingDuration: endParsing - startParsing,
