@@ -3,7 +3,7 @@
  * @flow
  */
 
-import stream from 'logrotate-stream';
+import fs from 'mz/fs';
 
 /**
  * A backend that writes the logs to a single file
@@ -15,14 +15,12 @@ class FileBackend {
    * Create a new FileBackend from the path of the file to write
    *
    * @param {string} filename the file where we should store the file
-   * @param {string} filesize size of the file before rotation
    */
-  constructor(filename, filesize) {
-    this.file = stream({
-      file: filename,
-      size: filesize,
-      keep: Infinity,
-      compress: true
+  constructor(filename) {
+    this.file = fs.createWriteStream(filename, {
+      flags: 'a+',
+      defaultEncoding: 'utf8',
+      autoClose: true
     });
   }
 

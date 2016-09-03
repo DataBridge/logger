@@ -15,12 +15,13 @@ import path from 'path';
 import FileBackend from './backends/file';
 import Logger from './Logger';
 import logSchema from './logSchema';
+import LogRotator from './LogRotator';
 
 const app = new Koa();
 const randomGenerator = new Chance();
-const logFilename = process.env.DATABRIDGE_LOGFILE || './all.log';
-const logFilesize = process.env.DATABRIDGE_LOGSIZE || '200m';
-const backend = new FileBackend(path.resolve(logFilename), logFilesize);
+const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
+const rotatedLogFilename = LogRotator.daily(logfilename);
+const backend = new FileBackend(path.resolve(rotatedLogFilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 
 logger.log('logger-prepare');
