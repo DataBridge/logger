@@ -5,6 +5,7 @@
 
 import Chance from 'chance';
 import Koa from 'koa';
+import cors from 'koa-cors';
 import now from 'performance-now';
 import { merge } from 'lodash';
 import parse from 'co-body';
@@ -20,6 +21,8 @@ const randomGenerator = new Chance();
 const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
 const backend = new FileBackend(path.resolve(logfilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
+
+app.use(cors());
 
 logger.log('logger-prepare');
 
