@@ -12,7 +12,6 @@ import parse from 'co-body';
 import { validate } from 'jsonschema';
 import path from 'path';
 import https from 'https';
-import http from 'http';
 import fs from 'fs';
 import forceSSL from 'koa-force-ssl';
 
@@ -140,6 +139,5 @@ if (typeof envKey === 'undefined' ||
   const privateKey = fs.readFileSync(envKey, 'utf8');
   const certificate = fs.readFileSync(envCertificate, 'utf8');
   const credentials = { key: privateKey, cert: certificate };
-  https.createServer(credentials, app.callback()).listen(port + 1);
-  http.createServer(app.callback()).listen(port);
+  https.createServer(credentials, app.callback()).listen(port);
 }
