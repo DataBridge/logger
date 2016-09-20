@@ -25,7 +25,7 @@ const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
 const backend = new FileBackend(path.resolve(logfilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
 const envKey = process.env.DATABRIDGE_KEY;
-const envCertificate = process.env.DATABRIDGE_CERTFICATE;
+const envCertificate = process.env.DATABRIDGE_CERTIFICATE;
 
 app.use(cors());
 
@@ -134,10 +134,11 @@ if (typeof envKey === 'undefined' ||
     envCertificate === '') {
   app.listen(port);
 } else {
+  logger.log('logger-in-https');
   // Force SSL on all page
   app.use(forceSSL());
-  const privateKey = fs.readFileSync(envKey, 'utf8');
-  const certificate = fs.readFileSync(envCertificate, 'utf8');
+  const privateKey = fs.readFileSync(path.resolve(envKey), 'utf8');
+  const certificate = fs.readFileSync(path.resolve(envCertificate), 'utf8');
   const credentials = { key: privateKey, cert: certificate };
   https.createServer(credentials, app.callback()).listen(port);
 }
