@@ -11,6 +11,9 @@ import { merge } from 'lodash';
 import parse from 'co-body';
 import { validate } from 'jsonschema';
 import path from 'path';
+import https from 'https';
+import fs from 'fs';
+import forceSSL from 'koa-force-ssl';
 
 import FileBackend from './backends/file';
 import Logger from './Logger';
@@ -21,6 +24,8 @@ const randomGenerator = new Chance();
 const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
 const backend = new FileBackend(path.resolve(logfilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
+const envKey = process.env.DATABRIDGE_KEY;
+const envCertificate = process.env.DATABRIDGE_CERTIFICATE;
 
 app.use(cors());
 
@@ -122,4 +127,18 @@ const port = process.env.NODE_PORT || 3000;
 logger.log('logger-start-listen', {
   port
 });
-app.listen(port);
+
+if (typeof envKey === 'undefined' ||
+    typeof envCertificate === 'undefined' ||
+    envKey === '' ||
+    envCertificate === '') {
+  app.listen(port);
+} else {
+  logger.log('logger-in-https');
+  // Force SSL on all page
+  app.use(forceSSL());
+  const privateKey = fs.readFileSync(path.resolve(envKey), 'utf8');
+  const certificate = fs.readFileSync(path.resolve(envCertificate), 'utf8');
+  const credentials = { key: privateKey, cert: certificate };
+  https.createServer(credentials, app.callback()).listen(port);
+}
