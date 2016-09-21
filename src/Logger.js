@@ -3,9 +3,7 @@
  * @flow
  */
 
-import Chance from 'chance';
-
-const randomGenerator = new Chance();
+import uuid from 'uuid';
 
 /**
  * Allow to log things to a given backend
@@ -20,7 +18,7 @@ class Logger {
    */
   constructor(application,
     backend,
-    identity = randomGenerator.guid()) {
+    identity = uuid.v4()) {
     this.application = application;
     this.identity = identity;
     this.backend = backend;

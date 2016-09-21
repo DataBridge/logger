@@ -3,7 +3,7 @@
 * @flow
 */
 
-import Chance from 'chance';
+import uuid from 'uuid';
 import Koa from 'koa';
 import cors from 'koa-cors';
 import now from 'performance-now';
@@ -20,7 +20,6 @@ import Logger from './Logger';
 import logSchema from './logSchema';
 
 const app = new Koa();
-const randomGenerator = new Chance();
 const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
 const backend = new FileBackend(path.resolve(logfilename));
 const logger = new Logger('databridge-logger', backend, 'main-logging-server');
@@ -33,7 +32,7 @@ logger.log('logger-prepare');
 
 // Build ctx.log method
 app.use(async (ctx, next) => {
-  const requestId = randomGenerator.guid();
+  const requestId = uuid.v4();
   ctx.log = (eventId, details, level) => { // eslint-disable-line no-param-reassign
     const allDetails = merge(details, {
       requestId,
