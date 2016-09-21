@@ -33,7 +33,6 @@
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.11.6",
-    "chance": "^1.0.4",
     "co-body": "^4.2.0",
     "fs": "0.0.1-security",
     "https": "^1.0.0",
@@ -44,7 +43,8 @@
     "lodash": "^4.15.0",
     "mz": "^2.4.0",
     "performance-now": "^0.2.0",
-    "superagent": "^2.2.0"
+    "superagent": "^2.2.0",
+    "uuid": "^2.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
