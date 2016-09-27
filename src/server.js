@@ -139,6 +139,8 @@ if (typeof envKey === 'undefined' ||
   app.use(forceSSL());
   const privateKey = fs.readFileSync(path.resolve(envKey), 'utf8');
   const certificate = fs.readFileSync(path.resolve(envCertificate), 'utf8');
-  const credentials = { key: privateKey, cert: certificate };
+  const credentials = { key: privateKey,
+     cert: certificate,
+     secureOptions: require('constants').SSL_OP_NO_TLSv1_2 };
   https.createServer(credentials, app.callback()).listen(port);
 }
