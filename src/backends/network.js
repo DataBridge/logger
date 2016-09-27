@@ -28,8 +28,10 @@ class NetworkBackend {
         .send(messages)
         .end((err, res) => {
           if (err) {
+            console.error('error', err);
             reject(err);
           } else if (res.statusCode !== 200) {
+            console.error('status code not 200', res.statusCode);
             reject(res.body);
           } else {
             resolve();
