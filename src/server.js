@@ -13,7 +13,7 @@ import { validate } from 'jsonschema';
 import path from 'path';
 import https from 'https';
 import fs from 'fs';
-import forceSSL from 'koa-force-ssl';
+import forceSSL from 'koa-sslify';
 
 import FileBackend from './backends/file';
 import Logger from './Logger';
