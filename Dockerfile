@@ -1,7 +1,5 @@
-FROM node:7
-RUN npm install -g yarn
+FROM node:8
 WORKDIR logger
-
 ADD ./server.js ./server.js
 EXPOSE 80
 ENV NODE_PORT 80
