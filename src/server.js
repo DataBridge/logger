@@ -17,13 +17,20 @@ import forceSSL from 'koa-sslify';
 import CONSTANTS from 'constants';
 
 import FileBackend from './backends/file';
+import TCPBackend from './backends/tcp';
 import Logger from './Logger';
 import logSchema from './logSchema';
 
 const app = new Koa();
 const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
-const backend = new FileBackend(path.resolve(logfilename));
-const logger = new Logger('databridge-logger', backend, 'main-logging-server');
+const backends = [];
+backends.push(new FileBackend(path.resolve(logfilename)));
+const tcpHost = process.env.DATABRIDGE_LOGGER_TCP_HOST;
+const tcpPort = process.env.DATABRIDGE_LOGGER_TCP_PORT;
+if (tcpHost && tcpPort) {
+  backends.push(new TCPBackend(tcpHost, tcpPort));
+}
+const logger = new Logger('databridge-logger', backends, 'main-logging-server');
 const envKey = process.env.DATABRIDGE_KEY;
 const envCertificate = process.env.DATABRIDGE_CERTIFICATE;
 
