@@ -26,18 +26,21 @@ class Logger {
    * Create a new looger
    *
    * @param {string} application the name of the application bridge
-   * @param {function} backend the function responsible to store the log entry
+   * @param {Array | object} backends list of backends to use
    * @param {string} identity the identity of the person logging things
    * @param {number} aggregationTime the time frame to aggregate all the logs in a single block
    */
   constructor(application,
-    backend,
+    backends,
     identity = uuid.v4(),
     aggregationTime = 500
   ) {
     this.application = application;
     this.identity = identity;
-    this.backend = backend;
+    this.backends = backends;
+    if (!Array.isArray(this.backends)) {
+      this.backends = [this.backends];
+    }
     this.drainDebounced = debounce(this.drain, aggregationTime, {
       maxWait: this.aggregationTime
     });
@@ -51,7 +54,10 @@ class Logger {
    * @return {undefined} Nothing to return
    */
   drain = () => {
-    this.backend.store(this.buffer);
+    // Store for each backend
+    this.backends.forEach(backend => {
+      backend.store(this.buffer);
+    });
     this.buffer = [];
   }
 
@@ -73,7 +79,7 @@ class Logger {
       level
     };
     this.buffer.push(packet);
-    if (this.backend.length > MAX_BUFFER_SIZE) {
+    if (this.buffer.length > MAX_BUFFER_SIZE) {
       this.drain();
     } else {
       this.drainDebounced();
