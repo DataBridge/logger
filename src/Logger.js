@@ -38,8 +38,7 @@ class Logger {
     this.application = application;
     this.identity = identity;
     this.backend = backend;
-    this.aggregationTime = aggregationTime;
-    this.drainDebounced = debounce(this.drain, this.aggregationTime, {
+    this.drainDebounced = debounce(this.drain, aggregationTime, {
       maxWait: this.aggregationTime
     });
   }
