@@ -14,6 +14,7 @@ import path from 'path';
 import https from 'https';
 import fs from 'fs';
 import forceSSL from 'koa-sslify';
+import CONSTANTS from 'constants';
 
 import FileBackend from './backends/file';
 import Logger from './Logger';
@@ -43,6 +44,7 @@ app.use(async (ctx, next) => {
   // Log the new request
   ctx.log('new-request', {
     ip: ctx.request.ip,
+    forwardedFor: ctx.headers['x-forwarded-for'],
     length: ctx.request.length
   });
   await next();
@@ -139,7 +141,8 @@ if (typeof envKey === 'undefined' ||
   const privateKey = fs.readFileSync(path.resolve(envKey), 'utf8');
   const certificate = fs.readFileSync(path.resolve(envCertificate), 'utf8');
   const credentials = { key: privateKey,
-     cert: certificate,
-     secureOptions: require('constants').SSL_OP_NO_TLSv1_2 };
+    cert: certificate,
+    secureOptions: CONSTANTS.SSL_OP_NO_TLSv1_2
+  };
   https.createServer(credentials, app.callback()).listen(port);
 }
