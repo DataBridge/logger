@@ -13,7 +13,7 @@ This logging server accepts an **array** of `JSON` messages through HTTP/s Proto
 
 The domain of valid `JSON` messages are defined in `./src/logSchema.json` (A JSON-Schema descriptor)
 
-##Container Docker
+## Container Docker
 
 This repo is available as a Docker Container
 
