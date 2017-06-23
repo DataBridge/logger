@@ -117,7 +117,7 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   const startStoring = now();
   const messages = ctx.body;
-  await backend.store(messages);
+  await Promise.all(backends.map(backend => backend.store(messages)));
   const endStoring = now();
   ctx.log('logs-stored', {
     storingDuration: endStoring - startStoring
