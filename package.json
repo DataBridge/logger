@@ -2,11 +2,14 @@
   "name": "databridge-logger",
   "version": "1.0.0",
   "description": "aggregate logs from all databridge clients",
-  "main": "./src/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./server.js",
-    "lint": "node ./node_modules/eslint/bin/eslint.js src"
+    "lint": "node ./node_modules/eslint/bin/eslint.js src",
+    "compile": "cp -R ./src ./lib && ./node_modules/babel-cli/bin/babel.js -d lib src/",
+    "prestart": "npm run compile",
+    "prepare": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -45,6 +48,7 @@
     "uuid": "^2.0.3"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^6.1.2",
     "eslint": "^3.3.1",
     "eslint-config-airbnb": "^10.0.1",

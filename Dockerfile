@@ -8,5 +8,5 @@ ADD ./package.json ./package.json
 ADD ./.babelrc ./.babelrc
 RUN yarn 
 ADD ./src ./src
-CMD node server.js
+CMD npm start
 
