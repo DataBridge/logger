@@ -9,4 +9,3 @@ ADD ./.babelrc ./.babelrc
 RUN yarn 
 ADD ./src ./src
 CMD npm start
-
