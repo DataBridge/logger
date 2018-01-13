@@ -22,7 +22,10 @@
           "databridge-logger",
           "databridge-signaling-server",
           "databridge-connector",
-          "databridge-validator"
+          "databridge-validator",
+          "databridge-hub",
+          "databridge-hub-connector",
+          "databridge-script-server"
         ]
       },
 
