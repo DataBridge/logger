@@ -6,6 +6,7 @@ ENV NODE_PORT 80
 ADD ./yarn.lock ./yarn.lock
 ADD ./package.json ./package.json
 ADD ./.babelrc ./.babelrc
-RUN yarn 
+RUN yarn
 ADD ./src ./src
+RUN mkdir ./lib
 CMD npm start
