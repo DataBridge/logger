@@ -84,7 +84,7 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   const startParsing = now();
   try {
-    ctx.body = await parse.json(ctx.request, { limit: '10kb' });
+    ctx.body = await parse.json(ctx.request, { limit: '100kb' });
   } catch (e) {
     ctx.log('invalid-json-request', {
       method: ctx.request.method,
