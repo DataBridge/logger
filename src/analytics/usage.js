@@ -7,8 +7,11 @@ import fs from 'fs';
 import { promisify } from 'util';
 import path from 'path';
 import { URL } from 'url';
+import axios from 'axios';
 
 import Domain from './Domain.js';
+
+const hubAddress = process.env.DATABRIDGE_HUB_GRAPHQL || 'http://localhost:9000/graphql';
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -25,7 +28,65 @@ const createIfNew = (origin, resource) => {
   }
 };
 
-const getUsage = async (logFilePath) => {
+const saveStatToHub = async (domainName, timestamp, vlyntStat, sotStat) => {
+  // get the id corresponding to this domain name
+  const domainIdQueryResult = await axios({
+    url: hubAddress,
+    method: 'post',
+    data: {
+      query: `
+        query {
+          domainsByName(name: "${domainName}") {
+            id
+            verified
+          }
+        }`
+    }
+  });
+
+  // only take verified domains under this name
+  const verifiedDomains = domainIdQueryResult.data.data.domainsByName
+  .filter(domain => domain.verified === true);
+  if (verifiedDomains === undefined || verifiedDomains.length === 0) {
+    // no verified domain
+    console.log('no verified domains in db for', domainName)
+    return;
+  }
+  // take last domain in list as it is the most recent to have been verified
+  const domainId = verifiedDomains[verifiedDomains.length - 1].id;
+
+  axios({
+    url: hubAddress,
+    method: 'post',
+    data: {
+      query: `
+        mutation {
+          createStats(input: [
+            {
+              time: "${new Date(timestamp).toISOString()}",
+              DomainId: ${domainId},
+              vlynt: ${vlyntStat},
+              fallback: ${sotStat}
+            }
+          ]) {
+            stats {
+              id,
+              DomainId,
+              vlynt,
+              fallback
+            }
+          }
+      }`
+    }
+  }).then((result) => {
+    console.log(result.data.data.createStats.stats)
+  })
+  .catch((e) => {
+    console.log(e);
+  });
+}
+
+const extractUsage = async (logFilePath) => {
   logFilePath = path.resolve(__dirname, './1522537062332.log');
   const logFile = await readFileAsync(logFilePath, 'utf8');
   const logs = logFile.split('\n')
@@ -84,14 +145,17 @@ const getUsage = async (logFilePath) => {
       }
     }
 
-    vlyntStat *= 1e-6;
-    sotStat *= 1e-6;
+    // conversion to GB
+    vlyntStat *= 1e-9;
+    sotStat *= 1e-9;
     console.log('Vlynt load for', domain, ':', vlyntStat);
     console.log('SoT load for', domain, ':', sotStat);
+    saveStatToHub(domain, Date.now(), vlyntStat, sotStat);
     return true;
   }
 
   // TODO : send local file to storage + delete local log
 };
 
-getUsage('./test.log');
+// saveStatToHub('localhost', Date.now(), 1, 0);
+// getUsage('./test.log');

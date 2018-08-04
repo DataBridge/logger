@@ -1,5 +1,5 @@
 class Resource {
-  fileSize = NaN;
+  fileSize = NaN; // in bytes
   peerLoads = 0;
   sotLoads = 0;
 
