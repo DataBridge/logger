@@ -18,8 +18,6 @@ const adapters = { http, https };
 */
 function download(inputUrl: string, logger): Promise<ReadableStream> {
   return new Promise((resolve, reject) => {   // promisify the stream
-    logger.log('file-download-started', { url });
-
     // extract protocol from url
     const protocol = url.parse(inputUrl).protocol.slice(0, -1);
 
