@@ -115,8 +115,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-  const startStoring = now();
   const messages = ctx.body;
+  // Add IP to logs for analysis
+  Object.keys(messages).forEach((key) => {
+    messages[key].ip = ctx.request.ip;
+  });
+  const startStoring = now();
   await Promise.all(backends.map(backend => backend.store(messages)));
   const endStoring = now();
   ctx.log('logs-stored', {

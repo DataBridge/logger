@@ -1,11 +1,20 @@
 class Resource {
+  url: String;
   fileSize = NaN; // in bytes
-  peerLoads = 0;
-  sotLoads = 0;
+  peerLoads = []; // where 1 means loaded from peer and 0 from SoT
+  IPs = [];
+  devices = [];
+  timestamps = [];
+
+  constructor(url) {
+    this.url = url;
+  }
 
   reinitialise() {
-    this.peerLoads = 0;
-    this.sotLoads = 0;
+    this.peerLoads = [];
+    this.IPs = [];
+    this.devices = [];
+    this.timestamps = [];
   }
 }
 

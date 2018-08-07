@@ -3,8 +3,8 @@ import Resource from './Resource.js';
 class Domain {
   resources = {};
 
-  newResource(resource) {
-    this.resources[resource] = new Resource();
+  newResource(resource, url) {
+    this.resources[resource] = new Resource(url);
   }
 
   reinitialise() {
