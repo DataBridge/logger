@@ -93,7 +93,7 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   const startParsing = now();
   try {
-    ctx.body = await parse.json(ctx.request, { limit: '10kb' });
+    ctx.body = await parse.json(ctx.request, { limit: '100kb' });
   } catch (e) {
     ctx.log('invalid-json-request', {
       method: ctx.request.method,
@@ -124,8 +124,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-  const startStoring = now();
   const messages = ctx.body;
+  // Add IP to logs for analysis
+  Object.keys(messages).forEach((key) => {
+    messages[key].ip = ctx.request.ip;
+  });
+  const startStoring = now();
   await Promise.all(backends.map(backend => backend.store(messages)));
   const endStoring = now();
   ctx.log('logs-stored', {
