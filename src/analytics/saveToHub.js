@@ -10,9 +10,10 @@ const hubAddress = process.env.DATABRIDGE_HUB_GRAPHQL || 'http://localhost:9000/
 *
 * @param {string} domainName name of the domain the resources
 * @param {Object<Resource>} resources object with all loaded resources of this domain
+* @param {Object} logger logger instance used for logging in the analytics
 * @return {Promise} undefined
 */
-const saveToHub = async (domainName, resources: Object<Resource>): Promise => {
+const saveToHub = async (domainName, resources: Object<Resource>, logger): Promise => {
   // get the id corresponding to this domain name
   const domainIdQueryResult = await axios({
     url: hubAddress,
@@ -26,6 +27,8 @@ const saveToHub = async (domainName, resources: Object<Resource>): Promise => {
           }
         }`
     }
+  }).catch((e) => {
+    logger.log('error-querying-domainid', { error: e }, 'error');
   });
 
   // only take verified domains under this name
@@ -33,7 +36,7 @@ const saveToHub = async (domainName, resources: Object<Resource>): Promise => {
   .filter(domain => domain.verified === true);
   if (verifiedDomains === undefined || verifiedDomains.length === 0) {
     // no verified domain
-    console.log('no verified domains in db for', domainName)
+    logger.log('no-verified-domain-found', { domain: domainName }, 'warning');
     return;
   }
   // take last domain in list as it is the most recent to have been verified
@@ -78,10 +81,7 @@ const saveToHub = async (domainName, resources: Object<Resource>): Promise => {
         ${JSON.stringify(stats).replace(/"/g, '').replace(/\\/g, '"')}
       ) {
         stats {
-          id,
-          DomainId,
-          vlynt,
-          fallback
+          id
         }
       }
   }`;
@@ -92,12 +92,10 @@ const saveToHub = async (domainName, resources: Object<Resource>): Promise => {
     data: {
       query
     }
-  }).then((result) => {
-    console.log('hub response', result.data.data.createStats.stats)
   })
   .catch((e) => {
-    console.log(e);
+    logger.log('error-posting-stats', { error: e }, 'error');
   });
-}
+};
 
 export default saveToHub;

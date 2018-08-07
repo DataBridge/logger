@@ -5,7 +5,6 @@
 
 import fs from 'fs';
 import { promisify } from 'util';
-import path from 'path';
 import { URL } from 'url';
 
 import Domain from './Domain';
@@ -41,10 +40,10 @@ function createIfNew(origin, resource, url) {
 * Read logs and extract usage per resource for every domain
 *
 * @param {string} logFilePath path to the logFile
+* @param {Object} logger logger instance used for logging in the analytics
 * @return {undefined} undefined
 */
-const extractUsageData = async (logFilePath) => {
-  logFilePath = path.resolve(__dirname, './test.log');
+const extractUsageData = async (logFilePath, logger) => {
   const logFile = await readFileAsync(logFilePath, 'utf8');
   const logs = logFile.split('\n')
     .filter(logEntry => logEntry.length !== 0)
@@ -54,9 +53,8 @@ const extractUsageData = async (logFilePath) => {
   if (logs.length === 0) {
     return fs.unlink(logFilePath, (err) => {
       if (err) {
-        console.log(err);
+        logger.log('error-deleting-empty-log-file', { path: logFilePath }, 'error');
       }
-      console.log(logFilePath, 'was deleted');
     });
   }
 
@@ -102,20 +100,15 @@ const extractUsageData = async (logFilePath) => {
       const resource = domains[domain].resources[resourceName];
 
       if (isNaN(resource.fileSize)) {
-        console.log('No file size found for ', resourceName)
         resource.fileSize = await download(resource.url)   // download file
         .then(async (stream) => await computeFileSize(stream));
-        console.log('Computed fileSize ', resourceName, resource.fileSize)
       }
     }
 
-    saveToHub(domain, domains[domain].resources)
+    saveToHub(domain, domains[domain].resources, logger)
     .then(() => domains[domain].reinitialise());
-    saveToHub(domain, domains[domain].resources)
   }
-
-  // TODO : send local file to storage + delete local log
   return true;
 };
 
-extractUsageData('./test.log');
+export default extractUsageData;

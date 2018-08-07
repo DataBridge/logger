@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 
 import FileBackend from './backends/file';
+import analytics from './analytics';
 
 // Get path for a new log file
 const newLogFile = (logFolder, logExtension) => {
@@ -26,7 +27,13 @@ const rotate = (backends, activeLogFile, logFolder, logFileExt, logRotationTime)
     const newLogFileBackend = new FileBackend(path.resolve(newLogFilePath));
     backends.push(newLogFileBackend);
     backends.splice(backends.indexOf(activeLogFile), 1);
-    // TODO : send logFile to archive and delete it locally
+
+    // send old log file to analytics
+    analytics(activeLogFile.file.path, backends)
+    .then(() => {
+      // TODO : send logFile to archive and delete it locally
+    });
+
     activeLogFile = newLogFileBackend;
     rotate(backends, activeLogFile, logFolder, logFileExt, logRotationTime);
   }, logRotationTime);
