@@ -3,27 +3,20 @@
 * @flow
 */
 
-import path from 'path';
 import http from 'http';
 import https from 'https';
 import url from 'url';
 
-import FileBackend from '../backends/file';
-import Logger from '../Logger';
-
-const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
-const backends = [];
-backends.push(new FileBackend(path.resolve(logfilename)));
-const logger = new Logger('databridge-logger', backends, 'main-logging-server');
 const adapters = { http, https };
 
 /**
 * download file and return promise of content
 *
 * @param {string} inputUrl The url of the file
+* @param {Object} logger logger instance used for logging in the analytics
 * @return {Promise<ReadableStream>} promise of stream of data in file
 */
-function download(inputUrl: string): Promise<ReadableStream> {
+function download(inputUrl: string, logger): Promise<ReadableStream> {
   return new Promise((resolve, reject) => {   // promisify the stream
     logger.log('file-download-started', { url });
 

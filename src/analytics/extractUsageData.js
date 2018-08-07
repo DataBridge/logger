@@ -100,7 +100,7 @@ const extractUsageData = async (logFilePath, logger) => {
       const resource = domains[domain].resources[resourceName];
 
       if (isNaN(resource.fileSize)) {
-        resource.fileSize = await download(resource.url)   // download file
+        resource.fileSize = await download(resource.url, logger)   // download file
         .then(async (stream) => await computeFileSize(stream));
       }
     }
