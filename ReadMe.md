@@ -5,10 +5,12 @@
 - DATABRIDGE_KEY (optional): key for HTTPS
 - DATABRIDGE_CERTIFICATE (optional): certificate for https
 - NODE_PORT (optional), default is 3000 : port on which server operates
-- DATABRIDGE_LOGFILE (optional), default is './all.log' : name and path of logfile
+- DATABRIDGE_LOGFILE_EXTENSION (optional), default is '.log' : extension of logfile
+- DATABRIDGE_LOGFOLDER (optional), default is './logs' : folder to store logs
+- DATABRIDGE_LOG_ROTATION_TIME (optional), default is 1800 : time between log rotations [s]
 - DATABRIDGE_LOGGER_TCP_HOST (optional), if set enable TCP backend to this host
 - DATABRIDGE_LOGGER_TCP_PORT (optional), if set enable TCP backend to this port (the two need to be defined)
- 
+
 ## Protocol
 
 This logging server accepts an **array** of `JSON` messages through HTTP/s Protocol.

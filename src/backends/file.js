@@ -35,7 +35,7 @@ class FileBackend {
       .map(JSON.stringify)
       .join('\n');
 
-    return this.file.write(mergedMessages);
+    return this.file.write(`${mergedMessages}\n`);
   }
 }
 

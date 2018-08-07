@@ -20,11 +20,20 @@ import FileBackend from './backends/file';
 import TCPBackend from './backends/tcp';
 import Logger from './Logger';
 import logSchema from './logSchema';
+import logFileRotation from './logFileRotation';
 
 const app = new Koa();
-const logfilename = process.env.DATABRIDGE_LOGFILE || './all.log';
+
+const logFileExt = process.env.DATABRIDGE_LOGFILE_EXTENSION || '.log';
+const logFolder = process.env.DATABRIDGE_LOGFOLDER || './logs';
+// get ttl in seconds, converted to ms
+const logRotationTime = (process.env.DATABRIDGE_LOG_ROTATION_TIME || 1800) * 1000;
+const logFilePath = logFileRotation.newLogFile(logFolder, logFileExt);
+const activeLogFile = new FileBackend(path.resolve(logFilePath));
+
+
 const backends = [];
-backends.push(new FileBackend(path.resolve(logfilename)));
+backends.push(activeLogFile);
 const tcpHost = process.env.DATABRIDGE_LOGGER_TCP_HOST;
 const tcpPort = process.env.DATABRIDGE_LOGGER_TCP_PORT;
 if (tcpHost && tcpPort) {
@@ -115,8 +124,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-  const startStoring = now();
   const messages = ctx.body;
+  // Add IP to logs for analysis
+  Object.keys(messages).forEach((key) => {
+    messages[key].ip = ctx.request.ip;
+  });
+  const startStoring = now();
   await Promise.all(backends.map(backend => backend.store(messages)));
   const endStoring = now();
   ctx.log('logs-stored', {
@@ -135,6 +148,10 @@ const port = process.env.NODE_PORT || 3000;
 logger.log('logger-start-listen', {
   port
 });
+
+// rotate logs every [logRotationTime]
+logFileRotation.rotate(backends, activeLogFile, logFolder, logFileExt, logRotationTime);
+
 
 if (typeof envKey === 'undefined' ||
     typeof envCertificate === 'undefined' ||
