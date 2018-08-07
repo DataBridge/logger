@@ -10,6 +10,7 @@
 - DATABRIDGE_LOG_ROTATION_TIME (optional), default is 1800 : time between log rotations [s]
 - DATABRIDGE_LOGGER_TCP_HOST (optional), if set enable TCP backend to this host
 - DATABRIDGE_LOGGER_TCP_PORT (optional), if set enable TCP backend to this port (the two need to be defined)
+- DATABRIDGE_HUB_GRAPHQL (optional), URL to the graphql server for storing the analysed data
 
 ## Protocol
 
