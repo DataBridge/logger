@@ -52,7 +52,7 @@ const saveToHub = async (domainName, resources: Object<Resource>, logger): Promi
       latitude,
       longitude,
       region: `"${region}"`,
-      category: `"${device}"`
+      device: `"${device}"`
     });
 
   // Create an array of request for every resource
@@ -94,7 +94,7 @@ const saveToHub = async (domainName, resources: Object<Resource>, logger): Promi
     }
   })
   .catch((e) => {
-    logger.log('error-posting-stats', { error: e }, 'error');
+    logger.log('error-posting-stats', { error: JSON.stringify(e.message), query }, 'error');
   });
 };
 

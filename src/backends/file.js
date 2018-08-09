@@ -31,9 +31,15 @@ class FileBackend {
    * @return {Promise} a promise when the writing is done
    */
   store(messages) {
-    const mergedMessages = messages
-      .map(JSON.stringify)
-      .join('\n');
+    let mergedMessages;
+    try {
+      mergedMessages = messages.map(JSON.stringify)
+        .join('\n');
+    } catch (e) {
+      console.error(e);
+      console.log(messages);
+      mergedMessages = [JSON.stringify({ error: e })];
+    }
 
     return this.file.write(`${mergedMessages}\n`);
   }
