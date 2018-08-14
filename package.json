@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./server.js",
     "lint": "node ./node_modules/eslint/bin/eslint.js src",
-    "transpile": "cp -R ./src/* ./lib/ && ./node_modules/babel-cli/bin/babel.js -d lib src/",
+    "transpile": "rm -rf ./lib/ && ./node_modules/babel-cli/bin/babel.js -d lib src/ && cp ./src/logSchema.json ./lib/logSchema.json",
     "prestart": "npm run transpile",
     "prepublishOnly": "npm run transpile"
   },
